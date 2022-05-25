@@ -28,19 +28,17 @@ exports.getMensagem =async (req,res)=>{
 }
 exports.getUsuariosDasMensagens =async (req,res)=>{
     let emissor = req.body.emissor
-    const ids =await sequelize.query(`SELECT U.id,receptor,emissor,nome AS nomeDoReceptor,MAX(body) As ulmimaMensagem,M.createdAt AS hora FROM mensagems M ,usuarios U WHERE emissor = '${emissor}' AND receptor = U.id  GROUP BY M.receptor `)
+   
+    let queryAtual = `SELECT U.id,receptor,emissor,MAX(body) As ulmimaMensagem,nome AS nomeDoReceptor,M.createdAt AS hora FROM mensagems M ,usuarios U WHERE (emissor = ${emissor} AND receptor = u.id) or (receptor = ${emissor} AND emissor = u.id) GROUP BY u.id;`
+    let queryAntiga = `SELECT U.id,receptor,emissor,nome AS nomeDoReceptor,MAX(body) As ulmimaMensagem,M.createdAt AS hora FROM mensagems M ,usuarios U WHERE emissor = '${emissor}' AND receptor = U.id  GROUP BY M.receptor `
+    let queryTeste = `SELECT id,emissor,receptor,body as ulmimaMensagem,updatedAt as hora FROM mensagems WHERE receptor = ${emissor} or emissor = ${emissor};`
+    const ids =await sequelize.query(queryAtual)
     
     let values = []
      
      values = ids[0].filter(function (a) {
          return !this[JSON.stringify(a)] && (this[JSON.stringify(a)] = true);
      }, Object.create(null))
-    //  let arrayAux = []
-    //  values.forEach(element => {
-    //      console.log(element)
-    //      arrayAux.push(element)
-    //  });
-    //  const amigos = await sequelize.query("SELECT * FROM usuarios WHERE id IN")
      res.json(values)
 }
 exports.setMensagem =async (req,res)=>{
