@@ -7,5 +7,9 @@ const rotas = require('./Rotas')
 const cors = require('cors');  
 app.use(cors());
 
-app.use(rotas)
+//app.use(rotas)
+app.get("/",(req,res)=>{
+    res.send("alo mundo")
+})
+
 app.listen(PORT)
