@@ -10,4 +10,5 @@ rotas.post('/getUsuariosDasMensagens',multer(configMulter).single(),controllerMe
 rotas.post('/inserirMensagem',multer(configMulter).single(),controllerMensagem.setMensagem)
 rotas.delete('/deletarMensagem',multer(configMulter).single(),controllerMensagem.deletarMensagem)
 rotas.get('/usuarios',multer(configMulter).single(),controllerMensagem.listarUsuario)
+rotas.post('/jwt',multer(configMulter).single(),controllerUsuario.gerar_jwt)
 module.exports = rotas

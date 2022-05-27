@@ -1,5 +1,6 @@
 const modelUsuario = require('../Models/modelUsuario')
 const Sequelize = require('sequelize')
+const jwt = require('jsonwebtoken')
 const sequelize = new Sequelize('chat','root','',{
     host:'localhost',
     dialect:'mysql'
@@ -20,4 +21,21 @@ exports.setUsuarios = (req,res)=>{
   if(tabela){
       res.send('inserido com sucesso')
   }
+}
+
+exports.gerar_jwt =async (req,res)=>{
+    
+  const {email,senha} = req.body;
+  const user =await sequelize.query(`SELECT * FROM usuarios WHERE email ='${email}' AND senha ='${senha}'` )
+  
+  if(user[0] == ""){
+    res.send("null")
+  }else{
+    return res.json({
+      token : jwt.sign({usuario:req.body.usuario},'my-secret-key',{expiresIn:300}),
+      usuario:user[0]
+    })
+    
+  }
+  
 }
